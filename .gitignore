@@ -1,0 +1,17 @@
+# dependencies
+node_modules/
+
+# secrets & local env (Vercel tokens, Redis/Blob credentials)
+.env
+.env*.local
+
+# vercel
+.vercel
+
+# claude code local settings
+.claude/
+
+# os / editor junk
+.DS_Store
+*.log
+body.txt

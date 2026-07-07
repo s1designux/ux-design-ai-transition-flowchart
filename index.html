@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>UX디자인 프로세스 AI 전환 체계 v4 — Figma·디자인툴 확장 통합</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:'Malgun Gothic',sans-serif;background:#f5f7fa;color:#222;margin:0;padding:28px}
+h1{font-size:20px;color:#1a5276;margin:0 0 4px}
+h2{font-size:15px;color:#1a5276;margin-top:32px}
+.sub{font-size:12px;color:#777;margin-bottom:14px}
+.legend{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px;font-size:12px}
+.chip{padding:3px 10px;border-radius:12px;color:#fff;font-size:11px}
+.a-c{background:#1e8449}.b-c{background:#2471a3}.c-c{background:#ca6f1e}.d-c{background:#922b21}
+.f-c{background:#7d3c98}
+.stat{background:#fff;border:1px solid #dde;border-radius:8px;padding:6px 14px;text-align:center}
+.stat b{font-size:18px;color:#1a5276;display:block}
+.newb{background:#b7950b;color:#fff;font-size:10px;padding:1px 7px;border-radius:10px;white-space:nowrap}
+table{border-collapse:collapse;font-size:11.5px;background:#fff;margin:8px 0}
+th{background:#1a5276;color:#fff;padding:5px 9px;text-align:left}
+td{border:1px solid #ccd;padding:4px 9px;vertical-align:top}
+details{background:#fff;border:1px solid #dde;border-radius:6px;margin:6px 0;padding:8px 12px;font-size:12px}
+summary{cursor:pointer;font-weight:bold;color:#1a5276}
+details ol{margin:6px 0 2px;padding-left:20px}
+details li{margin:2px 0}
+.dim{color:#999}
+.lv{display:flex;gap:6px;align-items:center;margin:16px 0 6px;font-size:11px;color:#888}
+.lv span{width:120px;text-align:center;font-weight:bold}
+.lv .w4{width:400px;text-align:left;padding-left:8px}
+.tree,.tree ul{list-style:none;padding:0;margin:0}
+.tree{display:flex;flex-direction:column}
+.tree>li{display:flex;align-items:center;padding:16px 0;border-bottom:1px dashed #dde}
+.tree>li:last-child{border-bottom:none}
+.tree ul{display:flex;flex-direction:column;margin-left:22px;position:relative}
+.tree ul::before{content:'';position:absolute;left:-22px;top:50%;width:22px;border-top:2px solid #aab7c4}
+.tree ul li{display:flex;align-items:center;position:relative;padding:4px 0 4px 22px}
+.tree ul li::before{content:'';position:absolute;left:0;top:50%;width:22px;border-top:2px solid #aab7c4}
+.tree ul li::after{content:'';position:absolute;left:0;top:0;bottom:0;border-left:2px solid #aab7c4}
+.tree ul li:first-child::after{top:50%}
+.tree ul li:last-child::after{bottom:50%}
+.n{border-radius:6px;padding:7px 10px;font-size:12px;flex-shrink:0}
+.l1{background:#1a5276;color:#fff;width:120px;text-align:center;font-weight:bold;font-size:13px}
+.l1.g0{background:#5d6d7e}
+.l2{background:#2e86c1;color:#fff;width:120px;text-align:center}
+.l3{background:#d6eaf8;color:#1a5276;width:120px;font-size:11px}
+.l4{background:#fff;border:1px solid #ccd;width:400px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.l4.sa{border-left:5px solid #1e8449}.l4.sb{border-left:5px solid #2471a3}
+.l4.sc{border-left:5px solid #ca6f1e}.l4.sd{border-left:5px solid #922b21}
+.l4.nw{border:1.5px dashed #b7950b}
+.l4 .t{font-weight:bold;font-size:12px;display:flex;justify-content:space-between;gap:6px;align-items:flex-start}
+.l4 .b{font-size:10px;padding:1px 7px;border-radius:10px;color:#fff;white-space:nowrap}
+.kpi{font-size:10px;background:#eaf2f8;color:#1a5276;border-radius:10px;padding:0 7px;white-space:nowrap}
+.m5{list-style:none;margin:6px 0 0;padding:5px 0 0;border-top:1px dotted #dde;font-size:11px;color:#444}
+.m5 li{padding:1.5px 0 1.5px 14px;position:relative}
+.m5 li::before{content:'●';position:absolute;left:0;top:3px;font-size:8px}
+.m5 li.a::before{color:#1e8449}
+.m5 li.x::before{color:#ca6f1e}
+.m5 li.d::before{color:#922b21}
+.m5 li.g0r{color:#999;font-style:italic}
+.m5 li.g0r::before{content:'◎';color:#5d6d7e;font-size:10px;top:2px}
+/* v4 Figma 확장 표기 */
+.m5 li.f{background:#f6effa;border-radius:4px;margin:1px 0;padding-top:2.5px;padding-bottom:2.5px}
+.m5 li.f::before{color:#7d3c98}
+.ftag{background:#7d3c98;color:#fff;font-size:9px;padding:0 5px;border-radius:8px;margin-right:3px;white-space:nowrap}
+.ftag.on{background:#fff;color:#7d3c98;border:1px solid #7d3c98}
+.m5 .st{color:#b7950b;font-weight:bold}
+.cond{color:#b7950b;font-size:10px}
+/* ===== 코멘트 기능 ===== */
+#cbar{position:fixed;top:14px;right:14px;z-index:1000;display:flex;gap:6px;align-items:center;background:#fff;border:1px solid #ccd;border-radius:24px;padding:6px 10px;box-shadow:0 2px 8px rgba(0,0,0,.15);font-size:12px}
+#cbar button{border:1px solid #ccd;background:#fff;border-radius:16px;padding:4px 12px;font-size:12px;cursor:pointer;font-family:inherit}
+#cbar button:hover{background:#eaf2f8}
+#cbar button.on{background:#1a5276;color:#fff;border-color:#1a5276}
+#cbar .cnt{background:#eaf2f8;color:#1a5276;border-radius:10px;padding:1px 8px;font-weight:bold}
+body.addmode{cursor:crosshair}
+body.addmode .l4,body.addmode .n{cursor:crosshair}
+.cpin{position:absolute;width:28px;height:28px;background:#e91e63;color:#fff;border:2px solid #fff;border-radius:14px 14px 14px 2px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold;cursor:grab;z-index:900;box-shadow:0 0 0 2px rgba(233,30,99,.35),0 2px 8px rgba(0,0,0,.4);transform:translate(-4px,-28px);font-family:'Malgun Gothic',sans-serif;touch-action:none;user-select:none}
+.cpin:hover{background:#ad1457;transform:translate(-4px,-28px) scale(1.15)}
+.cpin.drag{cursor:grabbing;z-index:1200;background:#ad1457;transform:translate(-4px,-28px) scale(1.2);box-shadow:0 0 0 2px rgba(233,30,99,.5),0 6px 16px rgba(0,0,0,.5)}
+.cpin.hidden{display:none}
+#clist{position:fixed;top:58px;right:14px;z-index:999;width:320px;max-height:72vh;overflow-y:auto;background:#fff;border:1px solid #ccd;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.2);padding:10px;font-size:12px;display:none}
+#clist.open{display:block}
+#clist h3{margin:0 0 8px;font-size:13px;color:#e91e63}
+#clist .ci{border:1px solid #eee;border-left:4px solid #e91e63;border-radius:6px;padding:6px 8px;margin-bottom:6px;cursor:pointer}
+#clist .ci:hover{background:#fdf0f5}
+#clist .ci .no{display:inline-flex;width:18px;height:18px;background:#e91e63;color:#fff;border-radius:9px 9px 9px 2px;align-items:center;justify-content:center;font-size:10px;font-weight:bold;margin-right:6px}
+#clist .ci .tm{color:#999;font-size:10px}
+#clist .ci .tx{margin-top:3px;white-space:pre-wrap;line-height:1.45;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+#clist .empty{color:#999;text-align:center;padding:14px 0}
+#cpop{position:absolute;z-index:1001;width:270px;background:#fff;border:1px solid #ccd;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.25);padding:10px;font-size:12px}
+#cpop textarea{width:100%;height:64px;border:1px solid #ccd;border-radius:6px;padding:6px;font-size:12px;font-family:inherit;resize:vertical;box-sizing:border-box}
+#cpop .meta{color:#999;font-size:10px;margin:4px 0}
+#cpop .txt{white-space:pre-wrap;margin:4px 0 6px;line-height:1.5}
+#cpop .row{display:flex;gap:5px;justify-content:flex-end;margin-top:6px}
+#cpop .row button{border:1px solid #ccd;background:#fff;border-radius:6px;padding:3px 10px;font-size:11px;cursor:pointer;font-family:inherit}
+#cpop .row button.pri{background:#e91e63;color:#fff;border-color:#e91e63}
+#cpop .row button.del{color:#922b21}
+#doc.editing{outline:2px dashed #e91e63;outline-offset:6px;background:#fffdf9}
+#doc.editing [contenteditable]:hover{background:#fff3f7}
+#doc.editing td,#doc.editing summary,#doc.editing li,#doc.editing p,#doc.editing h1,#doc.editing h2{cursor:text}
+#doc.editing *:focus{outline:2px solid #e91e63;outline-offset:1px;background:#fff}
+#btnEdit.on{background:#e91e63;color:#fff;border-color:#e91e63}
+#editHint{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;background:#e91e63;color:#fff;padding:7px 16px;border-radius:20px;font-size:12px;z-index:1500;box-shadow:0 3px 12px rgba(0,0,0,.3);display:none}
+#editHint.show{display:block}
+#recBar{position:fixed;left:50%;transform:translateX(-50%);top:14px;background:#1a5276;color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;z-index:1600;box-shadow:0 4px 16px rgba(0,0,0,.35);display:none;align-items:center;gap:10px}
+#recBar.show{display:flex}
+#recBar button{border:0;border-radius:6px;padding:4px 12px;font-size:12px;cursor:pointer;font-family:inherit}
+#recBar #recBtn{background:#2ecc71;color:#fff;font-weight:bold}
+#recBar #recDismiss{background:transparent;color:#cdd;text-decoration:underline}
+</style>
+</head>
+<body>
+<div id="doc">
+<h1>UX디자인 프로세스 AI 전환 체계 v4 — Figma·디자인툴 확장 통합판</h1>
+<div class="sub">근거: (지침) S1-QI-081_02 + 외부 벤치마킹 + A~D 자동화 단계 + <b style="color:#e91e63">Figma·디자인툴 확장(F1~F18)</b> · L4 배지 = 의사결정 단계(A~D) · L5 점 = 실행 주체(초록 AI단독 / 주황 AI+사람 / 빨강 사람) · ◎ = G0 공통 참조 · ★ = 벤치마킹 신규</div>
+
+<div class="legend">
+  <span class="chip a-c">A 완전 자동화 · 9</span>
+  <span class="chip b-c">B AI 주도+인간 검토 · 15</span>
+  <span class="chip c-c">C 인간 주도+AI 보조 · 14</span>
+  <span class="chip d-c">D 사람만 가능 · 8</span>
+  <span class="chip f-c">보라 배경 = v4 신규 (Figma 확장)</span>
+  <span class="chip f-c" style="background:#fff;color:#7d3c98;border:1px solid #7d3c98">테두리 태그 = 기존 항목의 도구 구체화</span>
+  <span class="stat"><b>46</b>L4 태스크</span>
+  <span class="stat"><b>+12</b>v4 신규 L5</span>
+</div>
+
+<h2>1. 자동화 단계 정의 및 진단 기준 <span style="font-size:11px;color:#999">(v3과 동일)</span></h2>
+<table>
+<tr><th>단계</th><th>의사결정 주체</th><th>적합 업무 유형</th><th>진단 기준 (사내 UX업무 기준으로 조정)</th></tr>
+<tr><td><span class="chip a-c">A 완전 자동화</span></td><td>AI 100%</td><td>정형·반복·대량</td><td>핵심 7개 항목 전부 충족 (시스템 운영형 3항목은 '해당 시')</td></tr>
+<tr><td><span class="chip b-c">B AI 주도+인간 검토</span></td><td>AI 선처리 / 인간 최종 승인</td><td>고빈도 판단</td><td>필수 3개(검토 기준·설명가능성·책임자 지정) + 7개 중 5개 이상</td></tr>
+<tr><td><span class="chip c-c">C 인간 주도+AI 보조</span></td><td>인간 주도 / AI 지원</td><td>전문 판단·창의</td><td>필수 3개(리터러시 교육·민감정보 정책·책임 명확화)</td></tr>
+<tr><td><span class="chip d-c">D 사람만 가능</span></td><td>인간 100%</td><td>공감·윤리·책임 귀속</td><td>10개 중 3개 이상 해당 시 자동화 보류</td></tr>
+</table>
+
+<details><summary>A단계 체크리스트 (10항목 · 7+3 조정)</summary><ol>
+<li>입력 데이터가 정형화되어 있고 예외 케이스가 없다</li>
+<li>AI 판단에 대한 감사(audit) 로그가 자동 기록된다</li>
+<li>오류 발생 시 AI가 스스로 예외 처리·재시도한다</li>
+<li>결과물이 다운스트림 시스템(ALM·문서관리 등)에 자동 전달·저장된다</li>
+<li>SLA/품질 미달 시 자동 알림·롤백이 가능하다</li>
+<li>법적·규정 리스크가 없거나 자동 컴플라이언스를 통과한다</li>
+<li>운영 비용 대비 효율이 사람 대비 명확히 우수하다</li>
+<li class="dim">(해당 시) AI 모델 성능 지표를 실시간 모니터링한다</li>
+<li class="dim">(해당 시) 24/7 무중단 운영이 가능하다</li>
+<li class="dim">(해당 시) 재학습·모델 업데이트가 자동 트리거된다</li>
+</ol></details>
+<details><summary>B단계 체크리스트 (필수 3 + 7 중 5)</summary><ol>
+<li><b>[필수]</b> AI 결과물에 대한 사람 검토 기준(threshold)이 명확하다</li>
+<li><b>[필수]</b> 검토자가 AI 판단 근거(설명 가능성)를 확인할 수 있다</li>
+<li><b>[필수]</b> 최종 책임자가 사람으로 명확히 지정된다 (지침 4장 책임자 체계와 일치)</li>
+<li>신뢰도 낮은 결과는 자동으로 검토 대기열에 오른다</li>
+<li>검토 평균 시간이 정의·측정된다 → <b>KPI-08 연계</b></li>
+<li>AI가 반복·대량 작업의 90% 이상을 선처리한다</li>
+<li>거부·수정 항목이 피드백으로 재학습에 활용된다</li>
+<li>검토자 교육·결과 해석 가이드가 존재한다</li>
+<li>AI 오류율이 허용 기준치 이하로 관리된다 → <b>KPI-06 연계</b></li>
+<li>검토 병목 시 우선순위 재조정 체계가 있다</li>
+</ol></details>
+<details><summary>C단계 체크리스트 (필수 3)</summary><ol>
+<li>AI가 초안·후보안을 제시하고 사람이 선택·수정한다</li>
+<li>AI 추천 수용·거부 비율을 추적한다 → <b>KPI-11</b></li>
+<li>AI 보조 도구가 기존 워크플로(Figma 등)에 통합돼 있다</li>
+<li>AI 사용이 선택적이며 미사용 시에도 업무가 가능하다</li>
+<li><b>[필수]</b> 담당자가 AI 리터러시 교육을 받았다</li>
+<li>AI 제안이 맥락 정보(근거·출처)와 함께 제공된다</li>
+<li>AI 오류를 사람이 발견·수정하는 프로세스가 있다</li>
+<li>AI 보조에 따른 시간 절감 효과를 측정한다 → <b>KPI-03·05 연계</b></li>
+<li><b>[필수]</b> 민감 정보의 AI 입력 정책이 있다 (보안기업 특성상 선행 필수)</li>
+<li><b>[필수]</b> 최종 결과물 책임이 담당자 개인/팀에 있다</li>
+</ol></details>
+<details><summary>D단계 체크리스트 (3개 이상 해당 시 자동화 보류)</summary><ol>
+<li>감정적 공감·상황 맥락 이해가 결과 품질을 결정한다</li>
+<li>윤리적 판단·가치 충돌 해결이 포함된다</li>
+<li>고객·조직 내 신뢰 관계 구축이 핵심 성과다</li>
+<li>법적 책임이 자연인에게 귀속되어야 한다</li>
+<li>비정형·전례 없는 상황의 창의적 판단이 요구된다</li>
+<li>암묵지가 핵심이라 AI에 설명조차 어렵다</li>
+<li>결과의 옳고 그름 기준 자체를 사람이 설정한다</li>
+<li>대화·협상·설득에 비언어적 신호 해석이 필요하다</li>
+<li>실패 시 파급이 크고 되돌리기 어렵다</li>
+<li>AI 대체를 이해관계자가 수용하지 않는다</li>
+</ol></details>
+
+<div class="lv"><span>Level 1 대분류</span><span>Level 2 프로세스</span><span>Level 3 액티비티</span><span class="w4">Level 4 태스크 (A~D 배지) + Level 5 마이크로 태스크</span></div>
+
+<ul class="tree">
+
+<!-- G0 -->
+<li><div class="n l1 g0">G0<br>공통 지원업무<br><span style="font-size:10px;font-weight:normal">(전 단계 공통)</span></div>
+  <ul>
+    <li><div class="n l2">커뮤니케이션<br>지원</div>
+      <ul>
+        <li><div class="n l3">회의 운영</div>
+          <ul><li><div class="n l4 sb"><div class="t">G0.1 회의 운영 자동화<span class="b b-c">B</span></div>
+            <ul class="m5">
+              <li class="a">일정 조율·참석자 초대 메일 자동 발송</li>
+              <li class="x">회의록 자동 작성·요약 (사람 확인 후)</li>
+              <li class="a">회의록·결정사항 참석자 자동 배포</li>
+            </ul></div></li></ul>
+        </li>
+        <li><div class="n l3">알림·통보</div>
+          <ul><li><div class="n l4 sa"><div class="t">G0.2 알림·통보 자동화<span class="b a-c">A</span></div>
+            <ul class="m5">
+              <li class="a">결과 통보·공유 메일 자동 발송</li>
+              <li class="a">기한·지연 리마인드 자동 발송</li>
+              <li class="f a"><span class="ftag">F18</span>Figma Webhooks — 파일 업데이트 이벤트로 검수 트리거·관련자 자동 알림</li>
+            </ul></div></li></ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</li>
+
+<!-- 1 -->
+<li><div class="n l1">1<br>기획·프로젝트<br>계획</div>
+  <ul>
+    <li><div class="n l2">디자인<br>의뢰 접수</div>
+      <ul>
+        <li><div class="n l3">의뢰서<br>접수·검토</div>
+          <ul>
+            <li><div class="n l4 sa"><div class="t">1.1.1 의뢰서 접수·완성도 확인<span class="b a-c">A</span><span class="kpi">KPI-01</span></div>
+              <ul class="m5">
+                <li class="a">필수항목 자동 검증·누락 시 보완요청 발송</li>
+                <li class="a">접수대장 자동 기록</li>
+              </ul></div></li>
+            <li><div class="n l4 sb"><div class="t">1.1.2 과제유형 분류·배정<span class="b b-c">B</span><span class="kpi">KPI-01</span></div>
+              <ul class="m5">
+                <li class="x">유형·산출물 범위 추천</li>
+                <li class="x"><span class="st">★</span> 담당자 라우팅 제안 <span class="cond">(팀 규모 확인)</span></li>
+                <li class="d">분류·배정 확정</li>
+              </ul></div></li>
+            <li><div class="n l4 sc"><div class="t">1.1.3 유사 과거과제 검색<span class="b c-c">C</span><span class="kpi">KPI-03</span></div>
+              <ul class="m5">
+                <li class="x">과거 산출물 RAG 검색·재사용 자산 목록화 <span class="ftag on">F5 Figma 비주얼 검색</span></li>
+              </ul></div></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><div class="n l2">범위·일정<br>확정</div>
+      <ul>
+        <li><div class="n l3">개선범위 정의</div>
+          <ul><li><div class="n l4 sd"><div class="t">1.2.1 개선범위·목표 확정<span class="b d-c">D</span><span class="kpi">KPI-02</span></div>
+            <ul class="m5">
+              <li class="x">범위 초안·옵션 비교표 작성</li>
+              <li class="d">목표·범위 의사결정 (부서장, 4.2항)</li>
+              <li class="g0r">킥오프 회의 운영 → G0.1</li>
+            </ul></div></li></ul>
+        </li>
+        <li><div class="n l3">일정·공수 산정</div>
+          <ul><li><div class="n l4 sc"><div class="t">1.2.2 기간·비용 산정<span class="b c-c">C</span><span class="kpi">KPI-02</span></div>
+            <ul class="m5">
+              <li class="x">유사과제 데이터 기반 공수·기간 예측</li>
+              <li class="a">일정표(WBS) 초안 자동 생성</li>
+            </ul></div></li></ul>
+        </li>
+        <li><div class="n l3">진행방식 결정</div>
+          <ul><li><div class="n l4 sd"><div class="t">1.2.3 내부/외주 진행 결정<span class="b d-c">D</span></div>
+            <ul class="m5">
+              <li class="x">부하율·비용 비교표 생성</li>
+              <li class="d">진행방식 결정 (부서장)</li>
+            </ul></div></li></ul>
+        </li>
+        <li><div class="n l3">인력 배정</div>
+          <ul><li><div class="n l4 sd"><div class="t">1.2.4 책임자·담당자 선정<span class="b d-c">D</span></div>
+            <ul class="m5">
+              <li class="d">책임자·담당자 선정 (부서장)</li>
+              <li class="x">툴 권한 신청 자동 상신 <span class="cond">(보안정책 확인 필요)</span></li>
+            </ul></div></li></ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</li>
+
+<!-- 2 -->
+<li><div class="n l1">2<br>컨셉 정의</div>
+  <ul>
+    <li><div class="n l2">사용자<br>요구사항 정의</div>
+      <ul>
+        <li><div class="n l3">수집·정리</div>
+          <ul><li><div class="n l4 sb"><div class="t">2.1.1 요구사항·VOC 수집·문서화<span class="b b-c">B</span><span class="kpi">KPI-03</span></div>
+            <ul class="m5">
+              <li class="x">VOC·인터뷰 내용 자동 요약</li>
+              <li class="x">요구사항 항목화·정의서 초안 생성</li>
+              <li class="d">내용 확인·확정</li>
+              <li class="g0r">인터뷰 일정·회의록 배포 → G0</li>
+            </ul></div></li></ul>
+        </li>
+        <li><div class="n l3">우선순위 결정</div>
+          <ul><li><div class="n l4 sd"><div class="t">2.1.2 요구사항 우선순위 확정<span class="b d-c">D</span></div>
+            <ul class="m5">
+              <li class="x">영향도·빈도 분석자료 생성</li>
+              <li class="d">우선순위 확정 (UX책임자, 4.3항)</li>
+              <li class="g0r">확정 결과 통보 → G0.2</li>
+            </ul></div></li></ul>
+        </li>
+      </ul>
+    </li>
+    <li><div class="n l2">UX리서치·<br>서비스분석</div>
+      <ul>
+        <li><div class="n l3">벤치마킹·트렌드</div>
+          <ul><li><div class="n l4 sc"><div class="t">2.2.1 벤치마킹·트렌드 리서치<span class="b c-c">C</span><span class="kpi">KPI-03</span></div>
+            <ul class="m5">
+              <li class="x">경쟁사 화면·트렌드 자동 수집·요약</li>
+              <li class="x">비교 매트릭스·사내 적용 아이디어 초안</li>
+              <li class="d">시사점·차별화 포인트 도출</li>
+            </ul></div></li></ul>
+        </li>
+        <li><div class="n l3">현행 분석</div>
+          <ul><li><div class="n l4 sc"><div class="t">2.2.3 현행 화면 문제점 진단<span class="b c-c">C</span><span class="kpi">KPI-03</span></div>
+            <ul class="m5">
+              <li class="x">휴리스틱 체크리스트 AI 1차 진단</li>
+              <li class="d">핵심 문제 정의</li>
+              <li class="f a"><span class="ftag">F8</span>접근성 플러그인(Stark 등)으로 대비·터치타깃 검사를 디자인 단계로 전진 배치 (공용 엔진 ② 시프트레프트)</li>
+            </ul></div></li></ul>
+        </li>
+      </ul>
+    </li>
+    <li><div class="n l2">사용자 모델링<br><span class="newb">★ 신규</span></div>
+      <ul>
+        <li><div class="n l3">페르소나·저니맵</div>
+          <ul><li><div class="n l4 sc nw"><div class="t">2.4.1 페르소나·저니맵 작성 <span class="cond">(신규과제 한정)</span><span class="b c-c">C</span></div>
+            <ul class="m5">
+              <li class="x">리서치 기반 페르소나·저니맵 초안 생성</li>
+              <li class="d">핵심 페인포인트 확정</li>
+            </ul></div></li></ul>
+        </li>
+      </ul>
+    </li>
+    <li><div class="n l2">UX전략 수립</div>
+      <ul>
+        <li><div class="n l3">개선방향 제안</div>
+          <ul><li><div class="n l4 sc"><div class="t">2.3.1 개선방향 2~3안 초안<span class="b c-c">C</span><span class="kpi">KPI-04</span></div>
+            <ul class="m5">
+              <li class="x">컨셉·무드보드·카피 다안 생성 <span class="ftag on">F1 First Draft</span></li>
+              <li class="x">제안 발표자료 초안 생성 <span class="ftag on">F6 Figma Slides AI</span></li>
+              <li class="d">제안안 선별·완성도 제고</li>
+            </ul></div></li></ul>
+        </li>
+        <li><div class="n l3">방향 확정</div>
+          <ul><li><div class="n l4 sd"><div class="t">2.3.2 관련부서 협의·방향 확정<span class="b d-c">D</span></div>
+            <ul class="m5">
+              <li class="d">개선방향 의사결정 (협의·설득)</li>
+              <li class="g0r">협의 일정·협의록 배포 → G0</li>
+            </ul></div></li></ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</li>
+
+<!-- 3 -->
+<li><div class="n l1">3<br>설계</div>
+  <ul>
+    <li><div class="n l2">UI 상세설계</div>
+      <ul>
+        <li><div class="n l3">화면흐름 설계</div>
+          <ul><li><div class="n l4 sc"><div class="t">3.1.1 IA·화면 플로우 설계<span class="b c-c">C</span><span class="kpi">KPI-04</span></div>
+            <ul class="m5">
+              <li class="x">요구사항 기반 플로우 초안 생성</li>
+              <li class="d">플로우 검토·확정</li>
+            </ul></div></li></ul>
+        </li>
+        <li><div class="n l3">와이어프레임</div>
+          <ul><li><div class="n l4 sc"><div class="t">3.1.2 와이어프레임 작성<span class="b c-c">C</span><span class="kpi">KPI-04</span></div>
+            <ul class="m5">
+              <li class="x">텍스트→와이어프레임 생성·컴포넌트 매핑 <span class="ftag on">F1 First Draft</span></li>
+              <li class="d">화면 구조 확정</li>
+            </ul></div></li></ul>
+        </li>
+        <li><div class="n l3">UI사양서 작성</div>
+          <ul><li><div class="n l4 sc"><div class="t">3.1.3 UI사양서 작성<span class="b c-c">C</span><span class="kpi">KPI-05</span></div>
+            <ul class="m5">
+              <li class="x">7장 평가항목 구조 반영 초안 생성</li>
+              <li class="x">버튼·메시지 문구(UX카피) 제안</li>
+              <li class="d">동작·예외 정의 확정</li>
+            </ul></div></li></ul>
+        </li>
+        <li><div class="n l3">사양서 품질검사</div>
+          <ul><li><div class="n l4 sa"><div class="t">3.1.4 용어·문구 일관성 검사<span class="b a-c">A</span><span class="kpi">KPI-06</span></div>
+            <ul class="m5">
+              <li class="a">용어사전 기반 자동 검사·수정안 반영</li>
+              <li class="f a"><span class="ftag">F9</span>사내 용어사전 커스텀 Figma 플러그인 — 캔버스 안에서 실시간 검사 <span class="cond">(자체 개발 과제)</span></li>
+            </ul></div></li></ul>
+        </li>
+        <li><div class="n l3">설계 협의</div>
+          <ul><li><div class="n l4 sd"><div class="t">3.1.5 관련부서 UI설계 협의<span class="b d-c">D</span></div>
+            <ul class="m5">
+              <li class="x">안건 자동 정리</li>
+              <li class="d">설계 협의·확정 (UX책임자)</li>
+              <li class="g0r">회의 운영·결정사항 배포 → G0</li>
+            </ul></div></li></ul>
+        </li>
+      </ul>
+    </li>
+    <li><div class="n l2">UI프로토타입<br>테스트</div>
+      <ul>
+        <li><div class="n l3">프로토타입 제작</div>
+          <ul><li><div class="n l4 sc"><div class="t">3.2.1 인터랙션 프로토타입 제작<span class="b c-c">C</span><span class="kpi">KPI-04</span></div>
+            <ul class="m5">
+              <li class="x">Figma 화면 연결 자동 구성</li>
+              <li class="f x"><span class="ftag">F2</span>Figma Make — 프롬프트로 동작하는 프로토타입 생성 <span class="cond">(C→B 상향 후보)</span></li>
+              <li class="d">인터랙션 디테일 조정</li>
+            </ul></div></li></ul>
+        </li>
+        <li><div class="n l3">테스트·반영</div>
+          <ul><li><div class="n l4 sc"><div class="t">3.2.2 프로토타입 테스트·결과 반영<span class="b c-c">C</span></div>
+            <ul class="m5">
+              <li class="x">테스트 시나리오 자동 생성·결과 요약</li>
+              <li class="a"><span class="st">★</span> 참가자 모집·안내 자동화 <span class="cond">(외부 테스트 시)</span></li>
+              <li class="d">반영 여부 판단</li>
+            </ul></div></li></ul>
+        </li>
+      </ul>
+    </li>
+    <li><div class="n l2">GUI 디자인</div>
+      <ul>
+        <li><div class="n l3">비주얼 디자인</div>
+          <ul><li><div class="n l4 sc"><div class="t">3.3.1 컬러·폰트·배열·애니메이션 디자인<span class="b c-c">C</span><span class="kpi">KPI-04</span></div>
+            <ul class="m5">
+              <li class="x">시안 다안 생성</li>
+              <li class="a"><span class="st">★</span> 디자인 토큰 자동 린팅 <span class="ftag on">F7 Design Lint·변수 제안</span> <span class="cond">(디자인시스템 선행)</span></li>
+              <li class="f x"><span class="ftag">F4</span>AI 콘텐츠 채우기 — 목업 텍스트·이미지 생성, 배경 제거</li>
+              <li class="f x"><span class="ftag">F15</span>MCP write-back — AI가 캔버스에 프레임·변수·컴포넌트 직접 생성 (반복 화면 양산) <span class="cond">(B단계 후보·보안 검토 선행)</span></li>
+              <li class="d">크리에이티브 확정</li>
+            </ul></div></li></ul>
+        </li>
+        <li><div class="n l3">GUI사양서 작성</div>
+          <ul><li><div class="n l4 sb"><div class="t">3.3.2 GUI사양서 작성<span class="b b-c">B</span><span class="kpi">KPI-05</span></div>
+            <ul class="m5">
+              <li class="x">디자인 파일→사양서 자동 추출</li>
+              <li class="f a"><span class="ftag">F14</span>Dev Mode 주석·측정 자동 표기 — 위치·간격·스타일 값 사양서 일부 대체</li>
+              <li class="f x"><span class="ftag">F13</span>Code Connect — 컴포넌트↔실코드 매핑으로 추출 정확도 향상</li>
+              <li class="d">예외·의도(컨텍스트) 서술·승인</li>
+            </ul></div></li></ul>
+        </li>
+        <li><div class="n l3">GUI 검수</div>
+          <ul><li><div class="n l4 sb"><div class="t">3.3.3 GUI 검수결과서 작성<span class="b b-c">B</span><span class="kpi">KPI-05</span></div>
+            <ul class="m5">
+              <li class="x">7장 평가항목 체크리스트 자동 평가 초안</li>
+              <li class="d">판정·서명 (부분수정 시 생략 가능)</li>
+            </ul></div></li></ul>
+        </li>
+        <li><div class="n l3">에셋 제작</div>
+          <ul><li><div class="n l4 sa"><div class="t">3.3.4 에셋 리사이징·내보내기<span class="b a-c">A</span><span class="kpi">KPI-05</span></div>
+            <ul class="m5">
+              <li class="a">배치 익스포트·네이밍 규칙 자동 적용</li>
+              <li class="f a"><span class="ftag">F3</span>레이어 자동 네이밍·파일 정리 — 임시 레이어명 일괄 정돈 (검수 효율 직결)</li>
+            </ul></div></li></ul>
+        </li>
+        <li><div class="n l3">화면가이드 공유</div>
+          <ul><li><div class="n l4 sa"><div class="t">3.3.5 Zeplin/Figma 가이드 공유<span class="b a-c">A</span><span class="kpi">KPI-05</span></div>
+            <ul class="m5">
+              <li class="a">업로드·가이드 문서 자동 생성 <span class="ftag on">F17 게시 API</span></li>
+              <li class="a">개발부서 공유 알림 발송</li>
+              <li class="f x"><span class="ftag">F12</span>Figma MCP 서버 — 디자인 컨텍스트(컴포넌트·변수·코드)를 개발 AI 에이전트에 직접 제공 (design-to-code) <span class="cond">(베타·보안 검토 선행)</span></li>
+            </ul></div></li></ul>
+        </li>
+        <li><div class="n l3">GUI 최종확인</div>
+          <ul><li><div class="n l4 sb"><div class="t">3.3.6 GUI 디자인 최종 검수<span class="b b-c">B</span><span class="kpi">KPI-08</span></div>
+            <ul class="m5">
+              <li class="x">AI 사전검수 리포트 (공용 엔진 ①)</li>
+              <li class="d">최종 검수·승인 (UX책임자)</li>
+            </ul></div></li></ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</li>
+
+<!-- 4 -->
+<li><div class="n l1">4<br>개발</div>
+  <ul>
+    <li><div class="n l2">개발구현 지원</div>
+      <ul>
+        <li><div class="n l3">문의 대응</div>
+          <ul><li><div class="n l4 sb"><div class="t">4.1.1 디자인 관련 개발 문의 응대<span class="b b-c">B</span><span class="kpi">KPI-07</span></div>
+            <ul class="m5">
+              <li class="x">사양서 기반 Q&amp;A 챗봇 1차 응대</li>
+              <li class="f x"><span class="ftag">F12</span>MCP 직접 참조 — 개발자가 Figma 값을 AI로 직접 조회, 문의량 자체 감소 (구조 개선)</li>
+              <li class="d">예외·해석 필요 문의 답변</li>
+              <li class="a"><span class="st">★</span> FAQ 자동 축적 <span class="cond">(문의량 확인)</span></li>
+            </ul></div></li></ul>
+        </li>
+      </ul>
+    </li>
+    <li><div class="n l2">개발화면<br>GUI검수</div>
+      <ul>
+        <li><div class="n l3">비교검수</div>
+          <ul><li><div class="n l4 sb"><div class="t">4.2.1 구현화면 vs 사양서 비교 검출<span class="b b-c">B</span><span class="kpi">KPI-08</span></div>
+            <ul class="m5">
+              <li class="a">검수 대상 화면 자동 수집</li>
+              <li class="x">비전AI diff 불일치 검출 (공용 엔진 ①) <span class="ftag on">F16 Figma 렌더 vs 스크린샷 diff</span></li>
+              <li class="d">불일치 판정·중요도 결정</li>
+            </ul></div></li></ul>
+        </li>
+        <li><div class="n l3">지적사항 전달</div>
+          <ul><li><div class="n l4 sb"><div class="t">4.2.2 지적사항 정리·전달<span class="b b-c">B</span><span class="kpi">KPI-08</span></div>
+            <ul class="m5">
+              <li class="x">지적사항 리포트 자동 생성</li>
+              <li class="a">개발부서 전달 (이슈 등록은 5.3.1로 일원화)</li>
+            </ul></div></li></ul>
+        </li>
+      </ul>
+    </li>
+    <li><div class="n l2">사용성 테스트</div>
+      <ul>
+        <li><div class="n l3">정량 점검</div>
+          <ul><li><div class="n l4 sa"><div class="t">4.3.1 폰트·버튼크기·색상대비 점검<span class="b a-c">A</span><span class="kpi">KPI-08</span></div>
+            <ul class="m5">
+              <li class="a">접근성·대비 자동 전수 검사·리포트 (공용 엔진 ② — F8 디자인 단계 검사와 연동)</li>
+            </ul></div></li></ul>
+        </li>
+        <li><div class="n l3">종합 판단</div>
+          <ul><li><div class="n l4 sc"><div class="t">4.3.2 사용성 종합 평가<span class="b c-c">C</span></div>
+            <ul class="m5">
+              <li class="x">개선 우선순위 제안자료 생성</li>
+              <li class="d">사용성 종합 평가·개선 판단</li>
+            </ul></div></li></ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</li>
+
+<!-- 5 -->
+<li><div class="n l1">5<br>검수·품질평가</div>
+  <ul>
+    <li><div class="n l2">적합성<br>검토의뢰</div>
+      <ul>
+        <li><div class="n l3">의뢰서 제출</div>
+          <ul><li><div class="n l4 sb"><div class="t">5.1.1 완료 14일 전 검토의뢰서 제출<span class="b b-c">B</span><span class="kpi">KPI-09</span></div>
+            <ul class="m5">
+              <li class="a">D-14 자동 리마인드·의뢰서 자동 생성</li>
+              <li class="d">제출 확정 (개발담당부서)</li>
+            </ul></div></li></ul>
+        </li>
+      </ul>
+    </li>
+    <li><div class="n l2">최종 검수</div>
+      <ul>
+        <li><div class="n l3">개발화면 검수</div>
+          <ul><li><div class="n l4 sb"><div class="t">5.2.1 사양서 기준 최종 검수 (100% 원칙)<span class="b b-c">B</span><span class="kpi">KPI-08</span></div>
+            <ul class="m5">
+              <li class="x">AI 사전 전수검사 (공용 엔진 ① — 4.2.1과 상시 통합 운영)</li>
+              <li class="d">예외 판정 (UX책임자 협의)</li>
+              <li class="a">검수 이력 자동 기록</li>
+            </ul></div></li></ul>
+        </li>
+        <li><div class="n l3">결과서 작성</div>
+          <ul><li><div class="n l4 sb"><div class="t">5.2.2 개발화면 검수결과서 작성<span class="b b-c">B</span><span class="kpi">KPI-05</span></div>
+            <ul class="m5">
+              <li class="x">결과 자동 취합·초안 생성</li>
+              <li class="d">결과서 확정</li>
+            </ul></div></li></ul>
+        </li>
+      </ul>
+    </li>
+    <li><div class="n l2">이슈관리</div>
+      <ul>
+        <li><div class="n l3">등록·분류</div>
+          <ul><li><div class="n l4 sb"><div class="t">5.3.1 ALM 이슈 등록·등급 분류<span class="b b-c">B</span><span class="kpi">KPI-10</span></div>
+            <ul class="m5">
+              <li class="x">자동 분류·등급 추천·중복 검출</li>
+              <li class="d">등급 확정</li>
+            </ul></div></li></ul>
+        </li>
+        <li><div class="n l3">이슈 추적</div>
+          <ul><li><div class="n l4 sa"><div class="t">5.3.2 조치현황 모니터링<span class="b a-c">A</span><span class="kpi">KPI-10</span></div>
+            <ul class="m5">
+              <li class="a">상태 자동 추적·지연 알림 (→G0.2 연계)</li>
+            </ul></div></li></ul>
+        </li>
+      </ul>
+    </li>
+    <li><div class="n l2">승인·제출</div>
+      <ul>
+        <li><div class="n l3">부서장 승인</div>
+          <ul><li><div class="n l4 sd"><div class="t">5.4.1 검수결과 부서장 승인<span class="b d-c">D</span></div>
+            <ul class="m5">
+              <li class="a">승인요청 패키지 자동 구성·상신</li>
+              <li class="d">부서장 승인 (법적·품질 책임 귀속)</li>
+            </ul></div></li></ul>
+        </li>
+        <li><div class="n l3">산출물 제출</div>
+          <ul><li><div class="n l4 sa"><div class="t">5.4.2 QC3 Audit·품질평가 산출물 제출<span class="b a-c">A</span><span class="kpi">KPI-09</span></div>
+            <ul class="m5">
+              <li class="a">체크리스트 자동 검증·패키징·제출</li>
+            </ul></div></li></ul>
+        </li>
+      </ul>
+    </li>
+    <li><div class="n l2">기록관리</div>
+      <ul>
+        <li><div class="n l3">기록 보존</div>
+          <ul><li><div class="n l4 sa"><div class="t">5.5.1 보존기한 관리 (3년/영구)<span class="b a-c">A</span><span class="kpi">KPI-09</span></div>
+            <ul class="m5">
+              <li class="a">자동 분류·보존기한 관리·도래 알림</li>
+            </ul></div></li></ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</li>
+
+<!-- 6 -->
+<li><div class="n l1">6<br>외주진행 관리</div>
+  <ul>
+    <li><div class="n l2">업체선정</div>
+      <ul>
+        <li><div class="n l3">RFP 작성</div>
+          <ul><li><div class="n l4 sc"><div class="t">6.1.1 UX디자인 제안요청서(RFP) 작성<span class="b c-c">C</span><span class="kpi">KPI-05</span></div>
+            <ul class="m5">
+              <li class="x">과제정보 기반 RFP 초안 생성</li>
+              <li class="d">요건·평가기준 확정</li>
+              <li class="g0r">공고·발송 → G0.2</li>
+            </ul></div></li></ul>
+        </li>
+        <li><div class="n l3">평가·선정</div>
+          <ul><li><div class="n l4 sd"><div class="t">6.1.2 업체 평가·선정<span class="b d-c">D</span></div>
+            <ul class="m5">
+              <li class="x">제안서 자동 요약·기준 대비표 생성</li>
+              <li class="d">평가·선정 (부서장/책임자 — 계약 책임 귀속)</li>
+              <li class="g0r">결과 통보 → G0.2</li>
+            </ul></div></li></ul>
+        </li>
+      </ul>
+    </li>
+    <li><div class="n l2">외주 산출물<br>검수</div>
+      <ul>
+        <li><div class="n l3">중간 검수</div>
+          <ul><li><div class="n l4 sb"><div class="t">6.2.1 협력회사 중간 산출물 검수<span class="b b-c">B</span><span class="kpi">KPI-08</span></div>
+            <ul class="m5">
+              <li class="a">산출물 수령·형상관리 자동화</li>
+              <li class="f x"><span class="ftag">F11</span>Figma 브랜치·머지 — 외주 산출물을 브랜치로 받아 변경점 자동 비교</li>
+              <li class="x">사양 준수 자동 체크 (공용 엔진 ①)</li>
+              <li class="d">피드백 확정·전달</li>
+            </ul></div></li></ul>
+        </li>
+        <li><div class="n l3">최종 검수</div>
+          <ul><li><div class="n l4 sb"><div class="t">6.2.2 협력회사 최종 산출물 검수·승인<span class="b b-c">B</span><span class="kpi">KPI-08</span></div>
+            <ul class="m5">
+              <li class="x">AI 사전검수 리포트 (공용 엔진 ①)</li>
+              <li class="d">최종 검수·승인 (UX책임자)</li>
+            </ul></div></li></ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</li>
+
+</ul>
+
+<h2>2. v4 Figma·디자인툴 확장 목록 (F1~F18)</h2>
+<table>
+<tr><th>#</th><th>기능/도구</th><th>반영 위치</th><th>구분</th><th>전제조건</th></tr>
+<tr><td>F1</td><td>Figma First Draft (프롬프트→UI 초안)</td><td>2.3.1, 3.1.2</td><td>기존 도구 구체화</td><td>Figma 유료 플랜</td></tr>
+<tr><td>F2</td><td>Figma Make (동작 프로토타입 생성)</td><td>3.2.1</td><td>신규 L5 · C→B 상향 후보</td><td>Figma 유료 플랜</td></tr>
+<tr><td>F3</td><td>레이어 자동 네이밍·파일 정리</td><td>3.3.4</td><td>신규 L5</td><td>—</td></tr>
+<tr><td>F4</td><td>AI 콘텐츠 채우기 (목업 텍스트·이미지·배경 제거)</td><td>3.3.1</td><td>신규 L5</td><td>—</td></tr>
+<tr><td>F5</td><td>비주얼 검색 (유사 화면·컴포넌트)</td><td>1.1.3</td><td>기존 도구 구체화</td><td>—</td></tr>
+<tr><td>F6</td><td>Figma Slides AI (발표자료 초안)</td><td>2.3.1</td><td>기존 도구 구체화</td><td>—</td></tr>
+<tr><td>F7</td><td>디자인 린팅 (Design Lint·변수 제안)</td><td>3.3.1</td><td>기존 ★린팅의 실행 수단</td><td>디자인시스템 구축 선행</td></tr>
+<tr><td>F8</td><td>접근성 플러그인 (Stark 등) — 시프트레프트</td><td>2.2.3 (4.3.1 공용 엔진 ② 연동)</td><td>신규 L5</td><td>—</td></tr>
+<tr><td>F9</td><td>사내 용어사전 커스텀 플러그인</td><td>3.1.4</td><td>신규 L5 (자체 개발 과제)</td><td>플러그인 개발 공수</td></tr>
+<tr><td>F10</td><td>Library Analytics API (컴포넌트 사용률 집계)</td><td>KPI-00·11 데이터 원천</td><td>신규 KPI 소스</td><td>라이브러리 운영</td></tr>
+<tr><td>F11</td><td>Figma 브랜치·머지 (외주 변경점 비교)</td><td>6.2.1</td><td>신규 L5</td><td>Organization 플랜</td></tr>
+<tr><td>F12</td><td><b>Figma MCP 서버</b> (디자인 컨텍스트→AI 에이전트, design-to-code)</td><td>3.3.5, 4.1.1</td><td>신규 L5 (구조적 변화)</td><td>베타·추후 유료화, <b>보안팀 검토 선행</b></td></tr>
+<tr><td>F13</td><td>Code Connect (컴포넌트↔코드 매핑)</td><td>3.3.2</td><td>신규 L5</td><td>개발부서 협업 필요</td></tr>
+<tr><td>F14</td><td>Dev Mode 주석·측정 자동 표기</td><td>3.3.2</td><td>신규 L5</td><td>Dev Mode 시트</td></tr>
+<tr><td>F15</td><td>MCP write-back (캔버스 직접 생성·수정)</td><td>3.3.1</td><td>신규 L5 · B단계 후보</td><td><b>보안팀 검토 선행</b></td></tr>
+<tr><td>F16</td><td>Figma 렌더 vs 구현 스크린샷 diff</td><td>4.2.1 (공용 엔진 ①)</td><td>기존 구현 방식 확정</td><td>—</td></tr>
+<tr><td>F17</td><td>Zeplin/Figma 게시 API</td><td>3.3.5</td><td>기존 도구 구체화</td><td>—</td></tr>
+<tr><td>F18</td><td>Figma Webhooks (이벤트 트리거 알림)</td><td>G0.2</td><td>신규 L5</td><td>Organization 플랜</td></tr>
+</table>
+<p style="font-size:12px;color:#666">※ 공통 전제: Figma AI 기능은 Professional 이상 유료 플랜 필요. C단계 필수항목(민감정보 AI 입력 정책)에 따라 사내 화면의 외부 AI 학습 제외 설정·보안 검토가 F12/F15 도입의 선행 조건.</p>
+
+<h2>3. KPI 체계 <span style="font-size:11px;color:#999">(v3 + F10 데이터 원천 보강)</span></h2>
+<table>
+<tr><th>KPI</th><th>지표명</th><th>산식/정의</th><th>연계 체크리스트</th><th>주기</th><th>목표(예시)</th></tr>
+<tr><td>00</td><td>AI 자동화 단계 분포</td><td>A/B/C/D 단계별 태스크 비율·단계 상향 이동률 <span class="ftag">F10</span>Library Analytics로 디자인시스템 채택률 병행 집계</td><td>전체 진단 기준</td><td>분기</td><td>A+B 비중 1차년 30%→2차년 50%</td></tr>
+<tr><td>01</td><td>의뢰접수 리드타임</td><td>접수→과제확정 소요일</td><td>—</td><td>월</td><td>50% 단축</td></tr>
+<tr><td>02</td><td>일정 준수율</td><td>계획 내 완료÷전체×100</td><td>—</td><td>분기</td><td>95%↑</td></tr>
+<tr><td>03</td><td>리서치·요구분석 공수 절감률</td><td>(전-후)÷전×100</td><td>C-8</td><td>분기</td><td>30% 절감</td></tr>
+<tr><td>04</td><td>설계·시안 생산성</td><td>시안당 소요시간·과제당 시안 수</td><td>C-8</td><td>분기</td><td>시간 30%↓·시안 2배</td></tr>
+<tr><td>05</td><td>문서작성 공수 절감률</td><td>문서당 작성시간 절감률</td><td>B-5</td><td>분기</td><td>50% 절감</td></tr>
+<tr><td>06</td><td>AI 오류율</td><td>AI 산출물 오류 건수÷건수</td><td>B-9</td><td>월</td><td>기준치 이하</td></tr>
+<tr><td>07</td><td>개발문의 응답 리드타임</td><td>문의→답변 시간·AI 1차 해결률 <span class="ftag">F12</span>MCP 도입 시 문의량 자체를 추적 지표에 추가</td><td>B-5</td><td>월</td><td>70%↓·해결률 50%</td></tr>
+<tr><td>08</td><td>검수 1차 통과율·검토 시간</td><td>1차 통과율·검토 평균 시간</td><td>B-4</td><td>월</td><td>통과율 90%·시간 50%↓</td></tr>
+<tr><td>09</td><td>프로세스 준수율</td><td>D-14 의뢰·산출물 제출·기록보존</td><td>A-4</td><td>분기</td><td>100%</td></tr>
+<tr><td>10</td><td>이슈처리 효율</td><td>분류 정확도·조치 리드타임</td><td>B-1</td><td>월</td><td>정확도 90%·30%↓</td></tr>
+<tr><td>11</td><td>AI 제안 수용률</td><td>AI 추천·초안 수용÷제시 <span class="ftag">F10</span>컴포넌트 사용률 병행</td><td>C-2</td><td>월</td><td>추이 관리</td></tr>
+</table>
+
+<h2>4. 머지 판단 로그</h2>
+<table>
+<tr><th>#</th><th>처리</th><th>내용</th></tr>
+<tr><td>M1~M11</td><td>v3 처리분</td><td>3분류→A~D 전환, G0 통합, 리서치 통합, 공용 엔진 집계, ALM 일원화, 회고→KPI 흡수, 체크리스트↔KPI 매핑, A기준 완화, 5.1.1·1.2.4 수위 조정, ★조건부 유지 (상세는 v3 참조)</td></tr>
+<tr><td>M12</td><td>v4 추가</td><td>Figma·디자인툴 확장 F1~F18 반영. 신규 L5는 보라 배경+F배지, 기존 항목의 도구 구체화는 보라 테두리 태그로 구분. A~D 분류는 변경하지 않음(F2·F15는 상향 '후보'로만 표기 — 도입 검증 후 재분류)</td></tr>
+</table>
+
+</div><!-- /#doc -->
+
+<!-- ===== 코멘트 툴바 ===== -->
+<div id="cbar">
+  <button id="btnAdd" title="켠 후 코멘트 달 위치를 클릭">💬 코멘트 추가</button>
+  <button id="btnVis" title="핀 표시/숨김">👁 표시중</button>
+  <button id="btnList" title="코멘트 전체 목록">📋 목록</button>
+  <button id="btnAnchor" title="기존 핀을 현재 위치 기준으로 문서에 고정 (핀이 올바르게 보이는 컴퓨터에서 1회 실행)">📌 위치 고정</button>
+  <span class="cnt" id="cCnt">0</span>
+  <span id="cSync" title="공유 서버 동기화 상태" style="font-size:11px;color:#888"></span>
+  <span style="width:1px;height:20px;background:#ccd;display:inline-block;margin:0 2px"></span>
+  <button id="btnEdit" title="본문 내용을 직접 수정 (모두에게 공유됨)">✏️ 편집</button>
+  <button id="btnSave" title="편집 내용 저장" style="display:none">💾 저장</button>
+  <button id="btnCancel" title="편집 취소" style="display:none">취소</button>
+  <button id="btnExp" title="코멘트를 JSON 파일로 저장">내보내기</button>
+  <button id="btnImp" title="JSON 파일에서 코멘트 불러오기">가져오기</button>
+  <input type="file" id="impFile" accept=".json" style="display:none">
+</div>
+<div id="clist"></div>
+<div id="editHint">✏️ 편집모드 — 내용을 클릭해 수정하세요. 표·목록·제목 모두 편집됩니다. 다 되면 <b>💾 저장</b></div>
+<div id="recBar">
+  💾 이 브라우저에 저장돼 있던 코멘트 <b id="recN">0</b>건을 발견했습니다. 서버로 복원할까요?
+  <button id="recBtn">복원</button>
+  <button id="recDismiss">무시</button>
+</div>
+
+<script>
+(function(){
+  var API='/api/comments';
+  var CACHE='uxv4_comments_cache';
+  var comments=[];
+  try{comments=JSON.parse(localStorage.getItem(CACHE)||'[]');}catch(e){comments=[];}
+  if(!Array.isArray(comments))comments=[];
+  var addMode=false, visible=true, pop=null, isDragging=false;
+
+  // 서버가 원본(source of truth). 로컬 저장은 오프라인 대비 캐시일 뿐.
+  function save(){try{localStorage.setItem(CACHE,JSON.stringify(comments));}catch(e){}updCnt();renderList();}
+  function updCnt(){document.getElementById('cCnt').textContent=comments.length;}
+  function setSync(t){var el=document.getElementById('cSync');if(el)el.textContent=t;}
+
+  function editingOpen(){return !!(pop && pop.querySelector('textarea'));}
+
+  function apiGet(){return fetch(API,{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json();});}
+  function apiAdd(x,y,text,anchor){return fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({x:x,y:y,text:text,anchor:anchor||undefined})}).then(function(r){if(!r.ok)throw 0;return r.json();});}
+  function apiEdit(id,text){return fetch(API,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,text:text})}).then(function(r){if(!r.ok)throw 0;return r.json();});}
+  function apiMove(id,x,y,anchor){return fetch(API,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,x:x,y:y,anchor:anchor||undefined})}).then(function(r){if(!r.ok)throw 0;return r.json();});}
+  function apiDel(id){return fetch(API,{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id})}).then(function(r){if(!r.ok)throw 0;return r.json();});}
+
+  var firstPull=true;
+  function pull(){
+    if(editingOpen()||isDragging||editing)return Promise.resolve();
+    return apiGet().then(function(arr){
+      if(!Array.isArray(arr))return;
+      // 첫 로드에서 서버는 비었는데 이 브라우저 캐시에 코멘트가 있으면, 덮어쓰지 말고 복원 제안
+      if(firstPull && arr.length===0 && comments.length>0){ firstPull=false; offerRecovery(); return; }
+      firstPull=false;
+      comments=arr;try{localStorage.setItem(CACHE,JSON.stringify(comments));}catch(e){}render();setSync('● 동기화됨');
+    }).catch(function(){setSync('⚠ 오프라인');});
+  }
+  function offerRecovery(){
+    document.getElementById('recN').textContent=comments.length;
+    document.getElementById('recBar').classList.add('show');
+    setSync('● 동기화됨');
+  }
+
+  // 변경 지문(signature)만 싸게 조회 → 바뀌었을 때만 전체 로드. 잦은 폴링을 가볍게.
+  var lastSig=null;
+  function apiMeta(){return fetch(API+'?meta=1',{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json();});}
+  function refreshSig(){return apiMeta().then(function(m){lastSig=m.sig;}).catch(function(){});}
+  // 코멘트+본문 변경을 한 번의 요청으로 감지 (명령 수 최소화)
+  function tick(){
+    if(editingOpen()||isDragging||editing)return;   // 입력/드래그/본문편집 중에는 방해하지 않음
+    fetch('/api/meta',{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(m){
+      setSync('● 동기화됨');
+      if(String(m.cver)!==lastSig){lastSig=String(m.cver);pull();}
+      if(m.cntver!==lastContentVer){lastContentVer=m.cntver;pullContent();}
+    }).catch(function(){setSync('⚠ 오프라인');});
+  }
+  function fmt(ts){var d=new Date(ts);return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)+' '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);}
+
+  // ===== 앵커: 픽셀 좌표 대신 "문서 요소"에 핀을 고정 (화면크기·폰트·줌 달라도 같은 내용에 표시) =====
+  function docEl(){ return document.getElementById('doc'); }
+  function elementAtPagePoint(px,py){
+    var root=docEl(); if(!root) return null;
+    var best=null, bestArea=Infinity, all=root.getElementsByTagName('*');
+    for(var i=0;i<all.length;i++){
+      var el=all[i]; if(!el.getClientRects().length) continue;
+      var r=el.getBoundingClientRect(), l=r.left+window.scrollX, t=r.top+window.scrollY;
+      if(px>=l && px<=l+r.width && py>=t && py<=t+r.height){
+        var area=r.width*r.height; if(area<=bestArea){bestArea=area;best=el;}
+      }
+    }
+    return best;
+  }
+  function nodePath(el){
+    var root=docEl(), path=[];
+    while(el && el!==root){ var pa=el.parentNode; if(!pa) return null; path.unshift(Array.prototype.indexOf.call(pa.children,el)); el=pa; }
+    return el===root ? path : null;
+  }
+  function makeAnchor(px,py){
+    var el=elementAtPagePoint(px,py); if(!el) return null;
+    var path=nodePath(el); if(!path) return null;
+    var r=el.getBoundingClientRect(), l=r.left+window.scrollX, t=r.top+window.scrollY;
+    return { path:path, fx:r.width?Math.max(0,Math.min(1,(px-l)/r.width)):0.5, fy:r.height?Math.max(0,Math.min(1,(py-t)/r.height)):0.5 };
+  }
+  function resolvePath(path){
+    var el=docEl(); if(!el) return null;
+    for(var i=0;i<path.length;i++){ if(!el.children||!el.children[path[i]]) return null; el=el.children[path[i]]; }
+    return el;
+  }
+  function anchorToPage(a){
+    if(!a||!a.path) return null;
+    var el=resolvePath(a.path); if(!el) return null;
+    var r=el.getBoundingClientRect();
+    return { x:Math.round(r.left+window.scrollX+a.fx*r.width), y:Math.round(r.top+window.scrollY+a.fy*r.height) };
+  }
+
+  function render(){
+    document.querySelectorAll('.cpin').forEach(function(p){p.remove();});
+    comments.forEach(function(c,i){
+      if(c.anchor){ var pos=anchorToPage(c.anchor); if(pos){ c.x=pos.x; c.y=pos.y; } }  // 앵커 → 현재 화면 좌표
+      var p=document.createElement('div');
+      p.className='cpin'+(visible?'':' hidden');
+      p.style.left=c.x+'px'; p.style.top=c.y+'px';
+      p.textContent=i+1;
+      p.title=c.text+' (드래그해서 위치 이동)';
+      (function(pin,cm){
+        var moved=false, grabX=0, grabY=0, nx=cm.x, ny=cm.y;
+        pin.addEventListener('pointerdown',function(e){
+          if(e.button&&e.button!==0)return;   // 좌클릭/터치만
+          isDragging=true; moved=false;
+          grabX=e.pageX-cm.x; grabY=e.pageY-cm.y; nx=cm.x; ny=cm.y;
+          try{pin.setPointerCapture(e.pointerId);}catch(_){}
+          pin.classList.add('drag');
+          e.preventDefault(); e.stopPropagation();
+        });
+        pin.addEventListener('pointermove',function(e){
+          if(!isDragging)return;
+          if(Math.abs(e.pageX-cm.x-grabX)>3||Math.abs(e.pageY-cm.y-grabY)>3)moved=true;
+          if(!moved)return;
+          if(pop)closePop();
+          nx=Math.max(0,Math.round(e.pageX-grabX));
+          ny=Math.max(0,Math.round(e.pageY-grabY));
+          pin.style.left=nx+'px'; pin.style.top=ny+'px';
+          e.preventDefault();
+        });
+        function endDrag(e){
+          if(!isDragging)return;
+          isDragging=false;
+          pin.classList.remove('drag');
+          try{pin.releasePointerCapture(e.pointerId);}catch(_){}
+          e.stopPropagation();
+          if(!moved){ openView(cm); return; }   // 안 움직였으면 클릭 = 열기
+          var ox=cm.x, oy=cm.y, oa=cm.anchor;
+          var anchor=makeAnchor(nx,ny);
+          cm.x=nx; cm.y=ny; if(anchor) cm.anchor=anchor; save();
+          apiMove(cm.id,nx,ny,anchor).then(function(nc){cm.ts=nc.ts;save();refreshSig();})
+            .catch(function(){cm.x=ox;cm.y=oy;cm.anchor=oa;save();render();alert('위치 저장 실패 — 네트워크를 확인해 주세요.');});
+        }
+        pin.addEventListener('pointerup',endDrag);
+        pin.addEventListener('pointercancel',endDrag);
+        // pointerup 뒤에 따라오는 click이 방금 연 팝업을 닫지 못하도록 차단
+        pin.addEventListener('click',function(e){e.stopPropagation();});
+      })(p,c);
+      document.body.appendChild(p);
+    });
+    updCnt();
+    renderList();
+  }
+
+  function renderList(){
+    var panel=document.getElementById('clist');
+    if(!panel.classList.contains('open'))return;
+    if(comments.length===0){panel.innerHTML='<h3>📋 코멘트 목록</h3><div class="empty">코멘트가 없습니다</div>';return;}
+    panel.innerHTML='<h3>📋 코멘트 목록 ('+comments.length+')</h3>';
+    var sorted=comments.slice().sort(function(a,b){return a.y-b.y;});
+    sorted.forEach(function(c){
+      var idx=comments.indexOf(c);
+      var item=document.createElement('div');
+      item.className='ci';
+      item.innerHTML='<span class="no">'+(idx+1)+'</span><span class="tm">'+fmt(c.ts)+'</span><div class="tx"></div>';
+      item.querySelector('.tx').textContent=c.text;
+      item.addEventListener('click',function(e){
+        e.stopPropagation();
+        if(!visible){visible=true;syncVis();}
+        window.scrollTo({top:Math.max(0,c.y-200),behavior:'smooth'});
+        setTimeout(function(){openView(c);},400);
+      });
+      panel.appendChild(item);
+    });
+  }
+
+  function closePop(){if(pop){pop.remove();pop=null;}}
+
+  function mkPop(x,y){
+    closePop();
+    pop=document.createElement('div');
+    pop.id='cpop';
+    pop.style.left=Math.min(x, document.documentElement.scrollWidth-290)+'px';
+    pop.style.top=(y+6)+'px';
+    pop.addEventListener('click',function(e){e.stopPropagation();});
+    document.body.appendChild(pop);
+    return pop;
+  }
+
+  function openNew(x,y){
+    var p=mkPop(x,y);
+    p.innerHTML='<b style="color:#e91e63">새 코멘트</b><textarea placeholder="내용 입력..."></textarea><div class="row"><button class="c">취소</button><button class="pri">저장</button></div>';
+    var ta=p.querySelector('textarea'); ta.focus();
+    p.querySelector('.c').onclick=closePop;
+    p.querySelector('.pri').onclick=function(){
+      var t=ta.value.trim();
+      if(!t){ta.focus();return;}
+      var btn=this; btn.disabled=true; btn.textContent='저장중…';
+      apiAdd(x,y,t,makeAnchor(x,y)).then(function(c){comments.push(c);save();render();closePop();refreshSig();})
+        .catch(function(){btn.disabled=false;btn.textContent='저장';alert('저장 실패 — 네트워크를 확인한 뒤 다시 시도해 주세요.');});
+    };
+  }
+
+  function openView(c){
+    var p=mkPop(c.x,c.y);
+    var idx=comments.indexOf(c);
+    p.innerHTML='<b style="color:#e91e63">코멘트 #'+(idx+1)+'</b><div class="meta">'+fmt(c.ts)+'</div><div class="txt"></div><div class="row"><button class="del">삭제</button><button class="ed">수정</button><button class="cl">닫기</button></div>';
+    p.querySelector('.txt').textContent=c.text;
+    p.querySelector('.cl').onclick=closePop;
+    p.querySelector('.del').onclick=function(){
+      if(!confirm('이 코멘트를 삭제할까요? (모두에게서 삭제됩니다)'))return;
+      var btn=this; btn.disabled=true; btn.textContent='삭제중…';
+      apiDel(c.id).then(function(){comments=comments.filter(function(x){return x.id!==c.id;});save();render();closePop();refreshSig();})
+        .catch(function(){btn.disabled=false;btn.textContent='삭제';alert('삭제 실패 — 네트워크를 확인해 주세요.');});
+    };
+    p.querySelector('.ed').onclick=function(){
+      p.innerHTML='<b style="color:#e91e63">코멘트 수정</b><textarea></textarea><div class="row"><button class="c">취소</button><button class="pri">저장</button></div>';
+      var ta=p.querySelector('textarea'); ta.value=c.text; ta.focus();
+      p.querySelector('.c').onclick=function(){closePop();};
+      p.querySelector('.pri').onclick=function(){
+        var t=ta.value.trim();
+        if(!t){ta.focus();return;}
+        var btn=this; btn.disabled=true; btn.textContent='저장중…';
+        apiEdit(c.id,t).then(function(nc){c.text=nc.text;c.ts=nc.ts;save();render();closePop();refreshSig();})
+          .catch(function(){btn.disabled=false;btn.textContent='저장';alert('저장 실패 — 네트워크를 확인해 주세요.');});
+      };
+    };
+  }
+
+  document.getElementById('btnAdd').addEventListener('click',function(e){
+    e.stopPropagation();
+    addMode=!addMode;
+    this.classList.toggle('on',addMode);
+    document.body.classList.toggle('addmode',addMode);
+    if(addMode && !visible){visible=true;syncVis();}
+  });
+
+  function syncVis(){
+    var b=document.getElementById('btnVis');
+    b.textContent=visible?'👁 표시중':'🚫 숨김';
+    b.classList.toggle('on',!visible);
+    document.querySelectorAll('.cpin').forEach(function(p){p.classList.toggle('hidden',!visible);});
+    if(!visible)closePop();
+  }
+  document.getElementById('btnVis').addEventListener('click',function(e){
+    e.stopPropagation(); visible=!visible; syncVis();
+  });
+
+  document.getElementById('btnList').addEventListener('click',function(e){
+    e.stopPropagation();
+    var panel=document.getElementById('clist');
+    panel.classList.toggle('open');
+    this.classList.toggle('on',panel.classList.contains('open'));
+    renderList();
+  });
+
+  document.getElementById('btnExp').addEventListener('click',function(e){
+    e.stopPropagation();
+    var blob=new Blob([JSON.stringify(comments,null,2)],{type:'application/json'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='ux_flowchart_v4_comments.json';
+    a.click();
+  });
+  document.getElementById('btnImp').addEventListener('click',function(e){
+    e.stopPropagation(); document.getElementById('impFile').click();
+  });
+  document.getElementById('impFile').addEventListener('change',function(){
+    var f=this.files[0]; if(!f)return;
+    var r=new FileReader();
+    r.onload=function(){
+      try{
+        var arr=JSON.parse(r.result);
+        if(!Array.isArray(arr)){alert('형식이 올바르지 않습니다.');return;}
+        if(!confirm('코멘트 '+arr.length+'건을 공유 서버에 추가할까요?'))return;
+        setSync('업로드중…');
+        var i=0;
+        (function next(){
+          if(i>=arr.length){pull().then(function(){alert('코멘트 '+arr.length+'건을 업로드했습니다.');});return;}
+          var c=arr[i++];
+          apiAdd(Number(c.x)||40,Number(c.y)||40,String(c.text||'')).then(next).catch(function(){
+            alert('업로드 중 오류가 발생했습니다 ('+(i-1)+'건 처리).');pull();
+          });
+        })();
+      }catch(e){alert('JSON 파싱 실패');}
+    };
+    r.readAsText(f);
+    this.value='';
+  });
+
+  document.addEventListener('click',function(e){
+    if(pop && !pop.contains(e.target)){closePop();}
+    if(!addMode)return;
+    if(e.target.closest('#cbar')||e.target.closest('.cpin')||e.target.closest('#cpop')||e.target.closest('#clist'))return;
+    openNew(e.pageX,e.pageY);
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'){
+      closePop();
+      if(addMode){addMode=false;document.getElementById('btnAdd').classList.remove('on');document.body.classList.remove('addmode');}
+    }
+  });
+
+  // ================= 본문 편집 (모두에게 공유) =================
+  var doc=document.getElementById('doc');
+  var editing=false, baseVer=0, lastContentVer=0;
+
+  function sanitizeClient(html){
+    return String(html).replace(/<script[\s\S]*?<\/script>/gi,'')
+      .replace(/\son\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi,'')
+      .replace(/javascript:/gi,'');
+  }
+  function contentMeta(){return fetch('/api/content?meta=1',{cache:'no-store'}).then(function(r){return r.json();});}
+  function pullContent(){
+    return fetch('/api/content',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
+      if(editing)return;
+      if(d && typeof d.html==='string' && d.html.length){doc.innerHTML=d.html;render();}
+      lastContentVer=d?d.ver:0; baseVer=lastContentVer;
+    }).catch(function(){});
+  }
+  function tickContent(){
+    if(editing)return;
+    contentMeta().then(function(m){if(m && m.ver!==lastContentVer){lastContentVer=m.ver;pullContent();}}).catch(function(){});
+  }
+
+  var elEdit=document.getElementById('btnEdit'),
+      elSave=document.getElementById('btnSave'),
+      elCancel=document.getElementById('btnCancel'),
+      elHint=document.getElementById('editHint');
+
+  function enterEdit(){
+    editing=true;
+    if(addMode){addMode=false;document.getElementById('btnAdd').classList.remove('on');document.body.classList.remove('addmode');}
+    doc.setAttribute('contenteditable','true');
+    doc.classList.add('editing');
+    elEdit.style.display='none'; elSave.style.display=''; elCancel.style.display='';
+    elHint.classList.add('show');
+  }
+  function exitEdit(){
+    editing=false;
+    doc.removeAttribute('contenteditable');
+    doc.classList.remove('editing');
+    elEdit.style.display=''; elSave.style.display='none'; elCancel.style.display='none';
+    elHint.classList.remove('show');
+  }
+
+  elEdit.addEventListener('click',function(e){
+    e.stopPropagation();
+    setSync('편집 준비중…');
+    contentMeta().then(function(m){baseVer=m?m.ver:0;lastContentVer=baseVer;}).catch(function(){}).then(enterEdit);
+  });
+  elCancel.addEventListener('click',function(e){
+    e.stopPropagation();
+    if(!confirm('편집한 내용을 저장하지 않고 취소할까요?'))return;
+    exitEdit(); pullContent(); setSync('● 동기화됨');
+  });
+  function doSave(force){
+    var html=sanitizeClient(doc.innerHTML);
+    elSave.disabled=true; elSave.textContent='저장중…';
+    return fetch('/api/content',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({html:html,baseVer:baseVer,force:!!force})})
+      .then(function(r){return r.json().then(function(d){return {status:r.status,d:d};});})
+      .then(function(res){
+        elSave.disabled=false; elSave.textContent='💾 저장';
+        if(res.status===200){baseVer=res.d.ver;lastContentVer=res.d.ver;exitEdit();setSync('● 저장됨');return;}
+        if(res.status===409){
+          if(confirm('다른 사람이 그 사이 본문을 수정했습니다.\n\n[확인] 내 편집으로 덮어쓰기\n[취소] 내 편집을 버리고 최신본 불러오기'))
+            return doSave(true);
+          exitEdit(); pullContent(); return;
+        }
+        alert('저장 실패: '+((res.d&&res.d.error)||res.status));
+      }).catch(function(){elSave.disabled=false;elSave.textContent='💾 저장';alert('저장 실패 — 네트워크를 확인해 주세요.');});
+  }
+  elSave.addEventListener('click',function(e){e.stopPropagation();doSave(false);});
+
+  // 편집 중 실수로 페이지를 벗어나면 경고
+  window.addEventListener('beforeunload',function(e){ if(editing){e.preventDefault();e.returnValue='';} });
+
+  // 기존(픽셀 좌표) 핀을 현재 화면 기준으로 문서 요소에 고정
+  document.getElementById('btnAnchor').addEventListener('click',function(){
+    var todo=comments.filter(function(c){return !c.anchor;});
+    if(!todo.length){ alert('모든 핀이 이미 문서에 고정되어 있습니다. 👍'); return; }
+    if(!confirm('지금 화면에 보이는 위치를 기준으로 핀 '+todo.length+'개를 문서 내용에 고정합니다.\n\n※ 반드시 핀이 "올바른 위치"에 보이는 컴퓨터에서 실행하세요.\n실행 후에는 화면 크기·폰트가 달라도 누구에게나 같은 위치에 표시됩니다.\n\n계속할까요?')) return;
+    var btn=this; btn.disabled=true; btn.textContent='고정중…';
+    (function next(i){
+      if(i>=todo.length){ btn.disabled=false; btn.textContent='📌 위치 고정'; alert('핀 '+todo.length+'개를 문서에 고정했습니다. 이제 다른 사람에게도 같은 위치로 보입니다.'); pull().then(refreshSig); return; }
+      var c=todo[i], anchor=makeAnchor(c.x,c.y);
+      if(!anchor){ next(i+1); return; }
+      apiMove(c.id,c.x,c.y,anchor).then(function(){ c.anchor=anchor; next(i+1); }).catch(function(){ next(i+1); });
+    })(0);
+  });
+
+  // 창 크기 변경 시 앵커된 핀 위치 다시 계산
+  var _rz; window.addEventListener('resize',function(){ clearTimeout(_rz); _rz=setTimeout(function(){ if(!editing&&!isDragging) render(); },200); });
+
+  // 로컬 캐시 → 서버 복원
+  document.getElementById('recBtn').addEventListener('click',function(){
+    var arr=comments.slice(); var btn=this; btn.disabled=true; btn.textContent='복원중…';
+    var i=0;
+    (function next(){
+      if(i>=arr.length){ document.getElementById('recBar').classList.remove('show'); pull().then(refreshSig); return; }
+      var c=arr[i++];
+      apiAdd(Number(c.x)||40,Number(c.y)||40,String(c.text||'')).then(next)
+        .catch(function(){ btn.disabled=false; btn.textContent='복원'; alert('복원 중 오류가 발생했습니다 ('+(i-1)+'/'+arr.length+'건 완료). 다시 눌러 이어서 시도하세요.'); });
+    })();
+  });
+  document.getElementById('recDismiss').addEventListener('click',function(){
+    document.getElementById('recBar').classList.remove('show');
+    comments=[]; try{localStorage.setItem(CACHE,'[]');}catch(e){} render();
+  });
+
+  // ================= 초기 로딩 & 동기화 =================
+  render();                       // 캐시로 즉시 렌더
+  setSync('동기화중…');
+  pullContent();                  // 서버에 저장된 본문 반영
+  pull().then(refreshSig);        // 코멘트 최초 로드 + 지문 저장
+  setInterval(function(){ if(!document.hidden) tick(); }, 3000);  // 3초마다 변경 감지 (숨겨진 탭은 폴링 중단 → 사용량 절약)
+  window.addEventListener('focus', tick);
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden) tick(); });
+})();
+</script>
+</body>
+</html>
